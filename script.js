@@ -14,19 +14,19 @@ function computerPlay() { //returns random computer selection
 }
 
 function youLose(playerSelection, computerSelection) { 
-    let result = "You lose! " + computerSelection + " beats " + playerSelection;
+    let result = "You lose this round! " + computerSelection + " beats " + playerSelection;
     computerScore++;
     return result;
 }
 
 function youWin(playerSelection, computerSelection) {
-    let result = "You win! " + playerSelection + " beats " + computerSelection;
+    let result = "You win this round! " + playerSelection + " beats " + computerSelection;
     playerScore++;
     return result;
 }
 
 function tie() {
-    let result = "Tie!";
+    let result = "This round is a tie!";
     return result;
 }
 
@@ -68,31 +68,41 @@ let playerScore = 0;
 let computerScore = 0;
 let rounds = 0;
 
-function game() { //play 5 rounds of rock paper scissors
-    do {
-        let playerSelection = prompt("Rock, paper, or scissors? Type end to end");
-        if (playerSelection.toLowerCase() === "end") {
-            process.exit(1);
+const container = document.querySelector('.container');
+const displayComputerScore = document.createElement('div');
+displayComputerScore.classList.add('displayComputerScore')
+const displayPlayerScore = document.createElement('div');
+displayPlayerScore.classList.add('displayPlayerScore');
+const buttons = document.querySelectorAll('button');
+
+buttons.forEach((button) => {
+  button.addEventListener('click', () => {
+      if (playerScore < 5 && computerScore < 5) {
+        playRound(button.id, computerPlay());
+        determineWinner();
+      }
+        displayPlayerScore.textContent = ("You: " + playerScore);
+        displayComputerScore.textContent = ("Computer: " + computerScore);
+        container.appendChild(displayPlayerScore);
+        container.appendChild(displayComputerScore);
+    });
+});
+
+const displayWinner = document.createElement('div');
+displayWinner.classList.add('displayWinner');
+
+function determineWinner() {
+    if (playerScore === 5 || computerScore === 5) {
+        if (playerScore > computerScore) {
+            displayWinner.textContent = ("Player wins!");
         }
         else {
-            playRound(playerSelection, computerPlay());
-            rounds++;
+            displayWinner.textContent = ("Computer wins!");
         }
-        if (rounds === 5) {
-            if (playerScore > computerScore) {
-                console.log("Player wins!")
-            }
-            if (playerScore < computerScore) {
-                console.log("Computer wins!")
-            }
-            if (playerScore == computerScore) {
-                console.log("Tie! Everybody wins!")
-            }
-            process.exit(1);
-        }
+        container.appendChild(displayWinner);
     }
-    while (rounds <= 5);
 }
 
-game();
+
+
 
